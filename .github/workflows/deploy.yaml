@@ -6,6 +6,15 @@ on:
       environment:
         type: string
         required: true
+    secrets:
+      GROUP_NAME:
+        required: true
+      SERVICE_NAME:
+        required: true
+      AWS_REGION:
+        required: true
+      AWS_DEPLOYMENT_ROLE_ARN:
+        required: true
 
 jobs:
   deploy:
@@ -16,13 +25,10 @@ jobs:
 
       - name: 'Configure AWS credentials'
         uses: aws-actions/configure-aws-credentials@v1
-        env:
-          AWS_DEPLOYMENT_ROLE_ARN: ${{ secrets.AWS_DEPLOYMENT_ROLE_ARN }}
-          AWS_REGION: ${{ secrets.AWS_REGION }}
         with:
-          role-to-assume: ${{ env.AWS_DEPLOYMENT_ROLE_ARN }}
+          role-to-assume: ${{ secrets.AWS_DEPLOYMENT_ROLE_ARN }}
           role-session-name: GitHubActions-${{ github.job }}-${{ github.run_id }}-${{ github.run_attempt }}
-          aws-region: ${{ env.AWS_REGION }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
       - name: 'Deploy Cloudformation Stack'
         env:

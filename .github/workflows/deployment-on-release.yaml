@@ -10,3 +10,9 @@ jobs:
     uses: tokyo-crafter/aws-stack-cmn/.github/workflows/deploy.yaml@main
     with:
       environment: prd
+    secrets:
+      GROUP_NAME: ${{ secrets.GROUP_NAME }}
+      SERVICE_NAME: ${{ secrets.SERVICE_NAME }}
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+      AWS_DEPLOYMENT_ROLE_ARN: ${{ secrets.AWS_DEPLOYMENT_ROLE_ARN }}
+

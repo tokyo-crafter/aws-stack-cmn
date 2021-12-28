@@ -28,7 +28,6 @@ jobs:
             ENVIRONMENT="dev";
           fi
           echo "::set-output name=environment::$ENVIRONMENT"
-          echo "::set-output name=release_tag::$RELEASE_TAG"
 
   deploy:
     needs:
@@ -36,6 +35,11 @@ jobs:
     uses: tokyo-crafter/aws-stack-cmn/.github/workflows/deploy.yaml@main
     with:
       environment: ${{ needs.preparation.outputs.environment }}
+    secrets:
+      GROUP_NAME: ${{ secrets.GROUP_NAME }}
+      SERVICE_NAME: ${{ secrets.SERVICE_NAME }}
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+      AWS_DEPLOYMENT_ROLE_ARN: ${{ secrets.AWS_DEPLOYMENT_ROLE_ARN }}
 
   create_release:
     needs:
@@ -60,10 +64,8 @@ jobs:
       - name: 'Bump version and push tag'
         id: tag_version
         uses: mathieudutour/github-tag-action@v5
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          github_token: ${{ env.GITHUB_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           default_bump: "minor"
 
       - name: 'Create release draft'
