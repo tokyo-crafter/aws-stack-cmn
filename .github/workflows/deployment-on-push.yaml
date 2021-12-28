@@ -12,7 +12,7 @@ env:
 
 jobs:
   lint:
-    uses: tokyo-crafter/aws-stack-cmn/.github/workflows/linter.yaml@master
+    uses: tokyo-crafter/aws-stack-cmn/.github/workflows/linter.yaml@main
 
   preparation:
     needs:
@@ -36,7 +36,7 @@ jobs:
   deploy:
     needs:
       - preparation
-    uses: tokyo-crafter/aws-stack-cmn/.github/workflows/deploy.yaml@master
+    uses: tokyo-crafter/aws-stack-cmn/.github/workflows/deploy.yaml@main
     with:
       group_name: ${{ env.GROUP_NAME }}
       service_name: ${{ env.SERVICE_NAME }}
