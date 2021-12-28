@@ -1,0 +1,71 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: AWS Cloudformation template for Tokyo Crafter Network
+
+Parameters:
+  GroupName:
+    Type: String
+  ServiceName:
+    Type: String
+  Environment:
+    Type: String
+    AllowedValues:
+      - dev
+      - stg
+      - prd
+
+Resources:
+
+  DynamoDBObjectTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub '${GroupName}-${Environment}-${ServiceName}-ObjectTable'
+      AttributeDefinitions:
+        - AttributeName: hashKey
+          AttributeType: S
+        - AttributeName: rangeKey
+          AttributeType: S
+      KeySchema:
+        - AttributeName: hashKey
+          KeyType: HASH
+        - AttributeName: rangeKey
+          KeyType: RANGE
+      BillingMode: PROVISIONED
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+      TimeToLiveSpecification:
+        AttributeName: ttl
+        Enabled: true
+
+  S3WebBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      BucketName: !Sub '${GroupName}-${Environment}-${ServiceName}-web'
+
+  S3ModuleBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      BucketName: !Sub '${GroupName}-${Environment}-${ServiceName}-mdl'
+
+Outputs:
+  DynamoDBObjectTableName:
+    Description: DynamoDB table name for Tokyo Crafter Network
+    Value: !Ref DynamoDBObjectTable
+    Export:
+      Name: !Sub '${GroupName}-DynamoDB-ObjectTableName'
+
+  S3WebBucketName:
+    Description: S3 bucket for Web assets
+    Value: !Ref S3WebBucket
+    Export:
+      Name: !Sub '${GroupName}-S3-WebBucketName'
+
+  S3ModuleBucketName:
+    Description: S3 bucket for modules
+    Value: !Ref S3ModuleBucket
+    Export:
+      Name: !Sub '${GroupName}-S3-ModuleBucketName'
