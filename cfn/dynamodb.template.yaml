@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description:
+Description: AWS Cloudformation template creating dynamodb for Tokyo Crafter Network
 
 Parameters:
   GroupName:
@@ -17,7 +17,7 @@ Resources:
   ObjectTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: !Sub '${GroupName}-${Environment}-ObjectTable'
+      TableName: !Sub '${GroupName}-${Environment}-${ServiceName}-ObjectTable'
       AttributeDefinitions:
         - AttributeName: hashKey
           AttributeType: S

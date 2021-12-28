@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: "2010-09-09"
-Description: ---
+Description: AWS Cloudformation template creating s3 for Tokyo Crafter Network
 
 Parameters:
   GroupName:
@@ -18,14 +18,16 @@ Resources:
   WebBucket:
     Type: AWS::S3::Bucket
     DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
     Properties:
-      BucketName: !Sub '${GroupName}-${Environment}-web'
+      BucketName: !Sub '${GroupName}-${Environment}-${ServiceName}-web'
 
   ModuleBucket:
     Type: AWS::S3::Bucket
     DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
     Properties:
-      BucketName: !Sub '${GroupName}-${Environment}-mdl'
+      BucketName: !Sub '${GroupName}-${Environment}-${ServiceName}-mdl'
 #
 #  WebBucketPolicy:
 #    Type: AWS::S3::BucketPolicy

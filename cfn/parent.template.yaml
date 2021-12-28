@@ -4,23 +4,20 @@ Description: AWS Cloudformation template for Tokyo Crafter Network
 Parameters:
   GroupName:
     Type: String
-    Default: tokyo-crafter
   ServiceName:
     Type: String
-    Default: cmn
   Environment:
     Type: String
     AllowedValues:
       - dev
       - stg
       - prd
-    Default: dev
 
-Mappings:
-  EnvMap:
-    dev:
-    stg:
-    prd:
+#Mappings:
+#  EnvMap:
+#    dev:
+#    stg:
+#    prd:
 
 Resources:
 
