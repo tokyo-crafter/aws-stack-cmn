@@ -16,9 +16,10 @@ jobs:
       - lint
     runs-on: ubuntu-20.04
     outputs:
-      environment: '' # stg or dev
+      environment: ${{ steps.check_environment.outputs.environment }} # stg or dev
     steps:
-      - name: 'Check environment'
+      - id: check_environment
+        name: 'Check environment'
         shell: bash
         run: |
           BRANCH=${GITHUB_REF#refs/heads/}
@@ -27,6 +28,7 @@ jobs:
           else
             ENVIRONMENT="dev";
           fi
+          echo "ENVIRONMENT = ${ENVIRONMENT}"
           echo "::set-output name=environment::$ENVIRONMENT"
 
   deploy:
