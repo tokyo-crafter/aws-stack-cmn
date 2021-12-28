@@ -3,12 +3,6 @@ name: Cloudformation deployment
 on:
   workflow_call:
     inputs:
-      group_name:
-        type: string
-        required: true
-      service_name:
-        type: string
-        required: true
       environment:
         type: string
         required: true
@@ -33,9 +27,9 @@ jobs:
       - name: 'Deploy Cloudformation Stack'
         env:
           ENVIRONMENT: ${{ inputs.environment }}
-          GROUP_NAME: ${{ inputs.group_name }}
-          SERVICE_NAME: ${{ inputs.service_name }}
-          STACK_NAME: ${{ inputs.group_name }}-${{ inputs.service_name }}-stack
+          GROUP_NAME: ${{ secrets.GROUP_NAME }}
+          SERVICE_NAME: ${{ secrets.SERVICE_NAME }}
+          STACK_NAME: ${{ secrets.GROUP_NAME }}-${{ secrets.SERVICE_NAME }}-stack
           TEMPLATE_FILE: cfn/parent.tamplate.yaml
         run: |
           aws cloudformation deploy \

@@ -5,14 +5,8 @@ on:
     types:
       - published
 
-env:
-  GROUP_NAME: ${{ secrets.GROUP_NAME }}
-  SERVICE_NAME: ${{ secrets.GROUP_NAME }}
-
 jobs:
   deploy:
     uses: tokyo-crafter/aws-stack-cmn/.github/workflows/deploy.yaml@main
     with:
-      group_name: ${{ env.GROUP_NAME }}
-      service_name: ${{ env.SERVICE_NAME }}
       environment: prd
