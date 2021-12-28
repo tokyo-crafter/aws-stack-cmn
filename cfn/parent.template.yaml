@@ -1,0 +1,62 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: AWS Cloudformation template for Tokyo Crafter Network
+
+Parameters:
+  GroupName:
+    Type: String
+    Default: tokyo-crafter
+  ServiceName:
+    Type: String
+    Default: cmn
+  Environment:
+    Type: String
+    AllowedValues:
+      - dev
+      - stg
+      - prd
+    Default: dev
+
+Mappings:
+  EnvMap:
+    dev:
+    stg:
+    prd:
+
+Resources:
+
+  DynamoDB:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: ./dynamodb.template.yaml
+      Parameters:
+        GroupName: !Ref GroupName
+        ServiceName: !Ref ServiceName
+        Environment: !Ref Environment
+
+  S3:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: ./s3.template.yaml
+      Parameters:
+        GroupName: !Ref GroupName
+        ServiceName: !Ref ServiceName
+        Environment: !Ref Environment
+
+Outputs:
+  DynamoDBObjectTableName:
+    Description: DynamoDB table name for Tokyo Crafter Network
+    Value: !GetAtt DynamoDB.Outputs.ObjectTableName
+    Export:
+      Name: !Sub '${GroupName}-DynamoDB-ObjectTableName'
+
+  S3WebBucketName:
+    Description: S3 bucket for Web assets
+    Value: !GetAtt S3.Outputs.WebBucketName
+    Export:
+      Name: !Sub '${GroupName}-S3-WebBucketName'
+
+  S3ModuleBucketName:
+    Description: S3 bucket for modules
+    Value: !GetAtt S3.Outputs.ModuleBucketName
+    Export:
+      Name: !Sub '${GroupName}-S3-ModuleBucketName'

@@ -1,0 +1,14 @@
+name: Cloudformation auto deployment for production
+
+on:
+  release:
+    types:
+      - published
+
+jobs:
+  deploy:
+    uses: tokyo-crafter/aws-stack-cmn/.github/workflows/deploy.yaml@v1
+    with:
+      group_name: ${{ secrets.GROUP_NAME }}
+      service_name: ${{ secrets.SERVICE_NAME }}
+      environment: prd

@@ -1,0 +1,76 @@
+name: Cloudformation auto deployment for develop
+
+on:
+  push:
+    branches:
+      - release
+      - develop
+
+jobs:
+  lint:
+    uses: tokyo-crafter/aws-stack-cmn/.github/workflows/linter.yaml@v1
+
+  preparation:
+    needs:
+      - lint
+    runs-on: ubuntu-20.04
+    outputs:
+      environment: '' # stg or dev
+    steps:
+      - name: 'Check environment'
+        shell: bash
+        run: |
+          BRANCH=${GITHUB_REF#refs/heads/}
+          if [[ $BRANCH == "release"* ]];  then
+            ENVIRONMENT="stg";
+          else
+            ENVIRONMENT="dev";
+          fi
+          echo "::set-output name=environment::$ENVIRONMENT"
+          echo "::set-output name=release_tag::$RELEASE_TAG"
+
+  deploy:
+    needs:
+      - preparation
+    uses: tokyo-crafter/aws-stack-cmn/.github/workflows/deploy.yaml@v1
+    with:
+      group_name: ${{ secrets.GROUP_NAME }}
+      service_name: ${{ secrets.SERVICE_NAME }}
+      environment: ${{ needs.preparation.outputs.environment }}
+
+  create_release:
+    needs:
+      - preparation
+      - deploy
+    if: ${{ needs.preparation.outputs.environment }}=='stg'
+    runs-on: ubuntu-20.04
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v2
+
+      - name: 'Setup Node'
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+          registry-url: "https://npm.pkg.github.com"
+
+      - name: set change log
+        uses: scottbrenner/generate-changelog-action@master
+        id: change-log
+
+      - name: 'Bump version and push tag'
+        id: tag_version
+        uses: mathieudutour/github-tag-action@v5
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          default_bump: "minor"
+
+      - name: 'Create release draft'
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.tag_version.outputs.new_tag }}
+          release_name: Release ${{ steps.tag_version.outputs.new_tag }}
+          draft: true
+          body: ${{ steps.change-log.outputs.changelog }}

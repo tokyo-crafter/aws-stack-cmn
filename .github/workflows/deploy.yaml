@@ -1,0 +1,42 @@
+name: Cloudformation deployment
+
+on:
+  workflow_call:
+    inputs:
+      group_name:
+        type: string
+        required: true
+      service_name:
+        type: string
+        required: true
+      environment:
+        type: string
+        required: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v2
+
+      - name: 'Configure AWS credentials'
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ secrets.AWS_DEPLOYMENT_ROLE_ARN }}
+          role-session-name: GitHubActions-${{ github.job }}-${{ github.run_id }}-${{ github.run_attempt }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: 'Deploy Cloudformation Stack'
+        env:
+          STACK_NAME: tokyo-crafter-cmn
+          TEMPLATE_FILE: cfn/parent.tamplate.yaml
+        run: |
+          aws cloudformation deploy \
+            --stack-name ${STACK_NAME} \
+            --template-file ${TEMPLATE_FILE} \
+            --parameter-overrides \
+                Environment=${{ inputs.environment }} \
+                GroupName=${{ inputs.group_name }} \
+                ServiceName=${{ inputs.service_name }} \
+            --no-fail-on-empty-changeset

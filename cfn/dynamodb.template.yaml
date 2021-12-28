@@ -1,0 +1,43 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description:
+
+Parameters:
+  GroupName:
+    Type: String
+  ServiceName:
+    Type: String
+  Environment:
+    Type: String
+    AllowedValues:
+      - dev
+      - stg
+      - prd
+
+Resources:
+  ObjectTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub '${GroupName}-${Environment}-ObjectTable'
+      AttributeDefinitions:
+        - AttributeName: hashKey
+          AttributeType: S
+        - AttributeName: rangeKey
+          AttributeType: S
+        - AttributeName: ttl
+          AttributeType: N
+      KeySchema:
+        - AttributeName: hashKey
+          KeyType: HASH
+        - AttributeName: rangeKey
+          KeyType: RANGE
+      BillingMode: PROVISIONED
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+      TimeToLiveSpecification:
+        AttributeName: ttl
+        Enabled: true
+
+Outputs:
+  ObjectTableName:
+    Value: !Ref ObjectTable
