@@ -42,7 +42,7 @@ jobs:
           GROUP_NAME: ${{ secrets.GROUP_NAME }}
           SERVICE_NAME: ${{ secrets.SERVICE_NAME }}
           STACK_NAME: ${{ secrets.GROUP_NAME }}-${{ secrets.SERVICE_NAME }}-stack
-          TEMPLATE_FILE: cfn/parent.tamplate.yaml
+          TEMPLATE_FILE: cfn/parent.template.yaml
         run: |
           aws cloudformation deploy \
             --stack-name ${STACK_NAME} \
