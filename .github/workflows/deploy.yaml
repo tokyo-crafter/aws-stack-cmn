@@ -3,12 +3,6 @@ name: Cloudformation deployment
 on:
   workflow_call:
     inputs:
-      group_name:
-        type: string
-        required: true
-      service_name:
-        type: string
-        required: true
       environment:
         type: string
         required: true
@@ -37,6 +31,6 @@ jobs:
             --template-file ${TEMPLATE_FILE} \
             --parameter-overrides \
                 Environment=${{ inputs.environment }} \
-                GroupName=${{ inputs.group_name }} \
-                ServiceName=${{ inputs.service_name }} \
+                GroupName=${{ secrets.GROUP_NAME }} \
+                ServiceName=${{ secrets.SERVICE_NAME }} \
             --no-fail-on-empty-changeset
