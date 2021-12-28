@@ -6,9 +6,13 @@ on:
       - release
       - develop
 
+env:
+  GROUP_NAME: ${{ secrets.GROUP_NAME }}
+  SERVICE_NAME: ${{ secrets.GROUP_NAME }}
+
 jobs:
   lint:
-    uses: tokyo-crafter/aws-stack-cmn/.github/workflows/linter.yaml@v1
+    uses: tokyo-crafter/aws-stack-cmn/.github/workflows/linter.yaml@master
 
   preparation:
     needs:
@@ -32,8 +36,10 @@ jobs:
   deploy:
     needs:
       - preparation
-    uses: tokyo-crafter/aws-stack-cmn/.github/workflows/deploy.yaml@v1
+    uses: tokyo-crafter/aws-stack-cmn/.github/workflows/deploy.yaml@master
     with:
+      group_name: ${{ env.GROUP_NAME }}
+      service_name: ${{ env.SERVICE_NAME }}
       environment: ${{ needs.preparation.outputs.environment }}
 
   create_release:
@@ -52,15 +58,17 @@ jobs:
           node-version: 14.x
           registry-url: "https://npm.pkg.github.com"
 
-      - name: set change log
+      - name: 'Set change log'
         uses: scottbrenner/generate-changelog-action@master
         id: change-log
 
       - name: 'Bump version and push tag'
         id: tag_version
         uses: mathieudutour/github-tag-action@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ env.GITHUB_TOKEN }}
           default_bump: "minor"
 
       - name: 'Create release draft'
