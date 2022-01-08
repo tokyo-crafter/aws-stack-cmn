@@ -50,7 +50,7 @@ jobs:
     needs:
       - preparation
       - deploy
-    if: ${{ needs.preparation.outputs.environment }}=='stg'
+    if: ${{ needs.preparation.outputs.environment =='stg' }}
     runs-on: ubuntu-20.04
     permissions:
       id-token: write
