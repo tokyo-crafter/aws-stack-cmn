@@ -51,4 +51,5 @@ jobs:
                 Environment=${ENVIRONMENT} \
                 GroupName=${GROUP_NAME} \
                 ServiceName=${SERVICE_NAME} \
-            --no-fail-on-empty-changeset
+            --no-fail-on-empty-changeset \
+            --change-set-type IMPORT
