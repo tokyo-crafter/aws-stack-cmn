@@ -40,7 +40,6 @@ Resources:
   S3WebBucket:
     Type: AWS::S3::Bucket
     DeletionPolicy: Retain
-    UpdateReplacePolicy: Retain
     Properties:
       BucketName: !Sub '${GroupName}-${Environment}-${ServiceName}-web'
       PublicAccessBlockConfiguration:
@@ -52,7 +51,6 @@ Resources:
   S3ModuleBucket:
     Type: AWS::S3::Bucket
     DeletionPolicy: Retain
-    UpdateReplacePolicy: Retain
     Properties:
       BucketName: !Sub '${GroupName}-${Environment}-${ServiceName}-mdl'
       PublicAccessBlockConfiguration:
