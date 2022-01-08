@@ -43,6 +43,11 @@ Resources:
     UpdateReplacePolicy: Retain
     Properties:
       BucketName: !Sub '${GroupName}-${Environment}-${ServiceName}-web'
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: True
+        BlockPublicPolicy: True
+        IgnorePublicAcls: True
+        RestrictPublicBuckets: True
 
   S3ModuleBucket:
     Type: AWS::S3::Bucket
@@ -50,6 +55,11 @@ Resources:
     UpdateReplacePolicy: Retain
     Properties:
       BucketName: !Sub '${GroupName}-${Environment}-${ServiceName}-mdl'
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: True
+        BlockPublicPolicy: True
+        IgnorePublicAcls: True
+        RestrictPublicBuckets: True
 
 Outputs:
   DynamoDBObjectTableName:
