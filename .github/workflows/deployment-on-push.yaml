@@ -52,6 +52,10 @@ jobs:
       - deploy
     if: ${{ needs.preparation.outputs.environment }}=='stg'
     runs-on: ubuntu-20.04
+    permissions:
+      id-token: write
+      contents: write
+      deployments: write
     steps:
       - name: 'Checkout'
         uses: actions/checkout@v2
