@@ -41,7 +41,7 @@ jobs:
           ENVIRONMENT: ${{ inputs.environment }}
           GROUP_NAME: ${{ secrets.GROUP_NAME }}
           SERVICE_NAME: ${{ secrets.SERVICE_NAME }}
-          STACK_NAME: ${{ secrets.GROUP_NAME }}-${{ secrets.SERVICE_NAME }}-stack
+          STACK_NAME: ${{ secrets.GROUP_NAME }}-${{ secrets.SERVICE_NAME }}-${{ inputs.environment }}-stack
           TEMPLATE_FILE: cfn/template.yaml
         run: |
           aws cloudformation deploy \
@@ -51,5 +51,4 @@ jobs:
                 Environment=${ENVIRONMENT} \
                 GroupName=${GROUP_NAME} \
                 ServiceName=${SERVICE_NAME} \
-            --no-fail-on-empty-changeset \
-            --change-set-type IMPORT
+            --no-fail-on-empty-changeset
