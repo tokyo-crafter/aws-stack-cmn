@@ -66,16 +66,16 @@ Outputs:
     Description: DynamoDB table name for Tokyo Crafter Network
     Value: !Ref DynamoDBObjectTable
     Export:
-      Name: !Sub '${GroupName}-DynamoDB-ObjectTableName'
+      Name: !Sub '${GroupName}-${Environment}-DynamoDB-ObjectTableName'
 
   S3WebBucketName:
     Description: S3 bucket for Web assets
     Value: !Ref S3WebBucket
     Export:
-      Name: !Sub '${GroupName}-S3-WebBucketName'
+      Name: !Sub '${GroupName}-${Environment}-S3-WebBucketName'
 
   S3ModuleBucketName:
     Description: S3 bucket for modules
     Value: !Ref S3ModuleBucket
     Export:
-      Name: !Sub '${GroupName}-S3-ModuleBucketName'
+      Name: !Sub '${GroupName}-${Environment}-S3-ModuleBucketName'
